@@ -1,0 +1,44 @@
+{
+  "name": "gulp-dest-clean",
+  "version": "0.0.1",
+  "description": "The gulp plugin `gulp-dest-clean` allows you to remove files from the destination folder which do not exist in the stream and do not match optionally supplied patterns",
+  "author": {
+    "name": "Ruslan Zhomir",
+    "email": "ruslanjf@gmail.com"
+  },
+  "engines": {
+    "node": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/DiamondeX/gulp-dest-clean.git"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "gulp",
+    "gulpplugin",
+    "minimatch",
+    "clean",
+    "dest",
+    "del",
+    "delete",
+    "unlink",
+    "rimraf",
+    "pipe"
+  ],
+  "bugs": {
+    "url": "https://github.com/DiamondeX/gulp-dest-clean/issues"
+  },
+  "homepage": "https://github.com/DiamondeX/gulp-dest-clean",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^1.1.1",
+    "del": "^2.1.0",
+    "gulp-util": "^3.0.7",
+    "object-assign": "^4.0.1",
+    "through2": "^2.0.0"
+  }
+}
