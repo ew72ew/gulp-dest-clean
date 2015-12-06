@@ -79,6 +79,7 @@ module.exports = function (destPath, exclude, exclOpts) {
     cb(0, file);
 
   }, function (cb){
+    var stream = this;
     Object.keys(parentsToExclude).forEach(function(dir){
       exclude.push("!" + path.join(destPath, dir));
     });
@@ -88,6 +89,8 @@ module.exports = function (destPath, exclude, exclOpts) {
     }
 
     del(exclude, exclOpts).then(function(deleted){
+
+      stream.deletedCount = deleted.length;
 
       if (verbose) {
         if(deleted.length) {

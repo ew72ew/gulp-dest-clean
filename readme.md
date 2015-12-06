@@ -72,7 +72,7 @@ Suppose you want to synchronize `build/img` with `src/img`, but preserve  `build
 └── c.png
 ```
 
-Then next gulpfile like this will help you:
+Then gulpfile like this will help you:
 
 ```js
 var gulp = require('gulp');
@@ -89,7 +89,7 @@ return gulp.src(imgSrc)
 .pipe(gulp.dest(imgDest));
 });
 ```
-Please note that old (or, in other words, unchanged in `src/img`) files are not deleted nor overwritten in `build/img`. 
+Please note that old (or, in other words, unchanged in `src/img`) files are not deleted nor overwritten in `build/img`.
 
 ##### For safety files and folders outside the current working directory can be removed only with option `force` set to **`true`**.
 
@@ -122,6 +122,8 @@ Make sure to return the stream so that gulp knows the clean task is [asynchronou
 
 ### clean(destPath[, exclude[, options]])
 
+A number of deleted files so far is available as a `deletedCount` property on the stream.
+
 #### destPath
 
 *Required*
@@ -146,7 +148,7 @@ See the `del` [options](https://github.com/sindresorhus/del#options).
 
 #### options.verbose
 
-Type: `boolean`  
+Type: `boolean`
 Default: `false`
 
 Output all patterns supplied to [del](https://github.com/sindresorhus/del) as well as deleted files.

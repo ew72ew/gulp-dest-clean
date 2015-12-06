@@ -7,7 +7,7 @@
     "email": "ruslanjf@gmail.com"
   },
   "engines": {
-    "node": "*"
+    "node": ">=0.10.0"
   },
   "repository": {
     "type": "git",
