@@ -1,6 +1,6 @@
 {
   "name": "gulp-dest-clean",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "The gulp plugin `gulp-dest-clean` allows you to remove files from the destination folder which do not exist in the stream and do not match optionally supplied patterns",
   "author": {
     "name": "Ruslan Zhomir",

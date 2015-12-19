@@ -126,11 +126,16 @@ module.exports = function (destPath, exclude, exclOpts) {
 
         extReplacer = function(cb, file, p) {
           getSrcStats(file).then(function(stats){
-            var isFile = !stats.isDirectory();
-            if(verbose) { console.log("processing:", p, "isFile:", isFile, "extname:", file.extname); }
-            if (isFile && ext[file.extname]) {
-              p = p.slice(0, -file.extname.length) + ext[file.extname];
-              if(verbose) { console.log("replaced from:", file.extname, "to:", p); }
+            var isFile = !stats.isDirectory()
+            , extName = p.match(/\.\w*$/);
+            ;
+
+            extName = extName && extName[0];
+
+            if(verbose) { console.log("processing:", p, "isFile:", isFile, "extname:", extName); }
+            if (isFile && ext[extName]) {
+              p = p.slice(0, -extName.length) + ext[extName];
+              if(verbose) { console.log("replaced from:", extName, "to:", p); }
             }
             exclude.push("!" + path.join(destPath, p));
             cb(0, file);
