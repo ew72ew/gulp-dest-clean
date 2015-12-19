@@ -146,6 +146,14 @@ Type: `object`
 
 See the `del` [options](https://github.com/sindresorhus/del#options).
 
+#### options.ext
+
+Type: `string` (e.g. `".css"`) or `object` (e.g. `{".less": ".css", ".yml": ".json"}`)
+Default: `null`
+
+If `string` is supplied, then extension of each file in the stream will be changed to supplied before exclusion from deletion.
+If `object` is supplied, then for each file with extension matching some of `object`'s key that extension will be changed to extension in corresponding `object`'s value before exclusion from deletion.
+
 #### options.verbose
 
 Type: `boolean`

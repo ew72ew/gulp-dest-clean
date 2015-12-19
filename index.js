@@ -7,7 +7,11 @@ var path = require('path')
 , objectAssign = require('object-assign')
 , PluginError = require('gulp-util').PluginError
 , del = require('del')
+, Promise = require('lie')
 ;
+
+Promise.prototype.catchTo = Promise.prototype['catch'];
+Promise.prototype.trap = Promise.prototype.catchTo;
 
 module.exports = function (destPath, exclude, exclOpts) {
   var parentsToExclude = {}
@@ -15,12 +19,18 @@ module.exports = function (destPath, exclude, exclOpts) {
   , PLUGIN_NAME = "gulp-dest-clean"
   , win32 = process.platform === "win32"
   , verbose
+  , ext
+  , extLen
+  , extReplacer
   ;
 
   exclOpts = objectAssign({}, exclOpts);
 
   verbose = exclOpts.verbose;
   delete exclOpts.verbose;
+
+  ext = exclOpts.ext;
+  delete exclOpts.ext;
 
   if(!destPath || typeof destPath !== "string") {
     return through.obj(function (file, enc, cb) { cb(null, file); }, function(cb){
@@ -49,9 +59,19 @@ module.exports = function (destPath, exclude, exclOpts) {
     }
   }
 
+  function getSrcStats(vinylFile){
+    console.log("stat is "+(vinylFile.stat ? "present" : "loaded"));
+    return vinylFile.stat ? Promise.resolve(vinylFile.stat) : new Promise(function(resolve, reject){
+      fs.stat(vinylFile.path, function(err, stats){
+        err ? reject(err) : resolve(stats);
+      });
+    });
+  }
+
   if(typeof exclude === "string") {
     exclude = [exclude];
   }
+
   if(!Array.isArray(exclude)){
     exclude = [];
   }
@@ -67,6 +87,53 @@ module.exports = function (destPath, exclude, exclOpts) {
 
   exclude = [].concat(srcPath, exclude);
 
+  extReplacer = function(cb, file, p) {
+    exclude.push("!" + path.join(destPath, p));
+
+    cb(0, file);
+  };
+
+  if(ext){
+    if(typeof ext === "string"){
+      ext = "." + ext.replace(/^\./, "");
+
+      extReplacer = function(cb, file, p) {
+        getSrcStats(file).then(function(stats){
+          var isFile = !stats.isDirectory();
+          if (isFile) {
+            p = p.replace(/\.\w*$/, ext);
+          }
+          exclude.push("!" + path.join(destPath, p));
+          cb(0, file);
+        });
+      };
+    } else {
+      if(typeof ext === "object") {
+
+        (function () {
+          var ext2 = {};
+          Object.keys(ext).forEach(function(from, to){
+            from = "." + from.replace(/^\./, "");
+            to = "." + ext[from].replace(/^\./, "");
+            ext2[from] = to;
+          });
+          ext = ext2;
+        } ());
+
+        extReplacer = function(cb, file, p) {
+          getSrcStats(file).then(function(stats){
+            var isFile = !stats.isDirectory();
+            if (isFile && ext[file.extname]) {
+              p = p.slice(0, -file.extname.length) + ext[file.extname];
+            }
+            exclude.push("!" + path.join(destPath, p));
+            cb(0, file);
+          });
+        };
+      }
+    }
+  }
+
   return through.obj(function (file, enc, cb) {
     var p = file.relative;
 
@@ -74,9 +141,7 @@ module.exports = function (destPath, exclude, exclOpts) {
 
     excludeParents(p);
 
-    exclude.push("!" + path.join(destPath, p));
-
-    cb(0, file);
+    extReplacer(cb, file, p);
 
   }, function (cb){
     var stream = this;
