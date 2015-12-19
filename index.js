@@ -113,8 +113,8 @@ module.exports = function (destPath, exclude, exclOpts) {
         (function () {
           var ext2 = {};
           Object.keys(ext).forEach(function(from, to){
-            from = "." + from.replace(/^\./, "");
             to = "." + ext[from].replace(/^\./, "");
+            from = "." + from.replace(/^\./, "");
             ext2[from] = to;
           });
           ext = ext2;
