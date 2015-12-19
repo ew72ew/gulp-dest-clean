@@ -60,7 +60,7 @@ module.exports = function (destPath, exclude, exclOpts) {
   }
 
   function getSrcStats(vinylFile){
-    console.log("stat is "+(vinylFile.stat ? "present" : "loaded"));
+    if(verbose) { console.log("stat is "+(vinylFile.stat ? "present" : "loaded")); }
     return vinylFile.stat ? Promise.resolve(vinylFile.stat) : new Promise(function(resolve, reject){
       fs.stat(vinylFile.path, function(err, stats){
         err ? reject(err) : resolve(stats);
@@ -95,6 +95,7 @@ module.exports = function (destPath, exclude, exclOpts) {
 
   if(ext){
     if(typeof ext === "string"){
+
       ext = "." + ext.replace(/^\./, "");
 
       extReplacer = function(cb, file, p) {
@@ -102,11 +103,13 @@ module.exports = function (destPath, exclude, exclOpts) {
           var isFile = !stats.isDirectory();
           if (isFile) {
             p = p.replace(/\.\w*$/, ext);
+            if(verbose) { console.log("replaced to:", p); }
           }
           exclude.push("!" + path.join(destPath, p));
           cb(0, file);
         });
       };
+
     } else {
       if(typeof ext === "object") {
 
@@ -125,6 +128,7 @@ module.exports = function (destPath, exclude, exclOpts) {
             var isFile = !stats.isDirectory();
             if (isFile && ext[file.extname]) {
               p = p.slice(0, -file.extname.length) + ext[file.extname];
+              if(verbose) { console.log("replaced from:", file.extname, "to:", p); }
             }
             exclude.push("!" + path.join(destPath, p));
             cb(0, file);
