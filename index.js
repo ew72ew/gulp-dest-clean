@@ -121,11 +121,13 @@ module.exports = function (destPath, exclude, exclOpts) {
             ext2[from] = to;
           });
           ext = ext2;
+          if(verbose) { console.log("ext replacements:", JSON.stringify(ext, 0, 2)); }
         } ());
 
         extReplacer = function(cb, file, p) {
           getSrcStats(file).then(function(stats){
             var isFile = !stats.isDirectory();
+            if(verbose) { console.log("processing:", p, "isFile:", isFile, "extname:", file.extname); }
             if (isFile && ext[file.extname]) {
               p = p.slice(0, -file.extname.length) + ext[file.extname];
               if(verbose) { console.log("replaced from:", file.extname, "to:", p); }
