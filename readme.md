@@ -122,7 +122,7 @@ Make sure to return the stream so that gulp knows the clean task is [asynchronou
 
 ### clean(destPath[, exclude[, options]])
 
-A number of deleted files so far is available as a `deletedCount` property on the stream.
+A list of deleted files so far is available as a `deleted` property on the stream.
 
 #### destPath
 

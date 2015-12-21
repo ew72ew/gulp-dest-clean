@@ -166,7 +166,7 @@ module.exports = function (destPath, exclude, exclOpts) {
 
     del(exclude, exclOpts).then(function(deleted){
 
-      stream.deletedCount = deleted.length;
+      stream.deleted = deleted;
 
       if (verbose) {
         if(deleted.length) {
