@@ -85,7 +85,7 @@ module.exports = function (destPath, exclude, exclOpts) {
     return "!" + path.join(destPath, v);
   });
 
-  exclude = [].concat(srcPath, exclude);
+  //exclude = [].concat(srcPath, exclude);
 
   extReplacer = function(cb, file, p) {
     exclude.push("!" + path.join(destPath, p));
@@ -128,7 +128,6 @@ module.exports = function (destPath, exclude, exclOpts) {
           getSrcStats(file).then(function(stats){
             var isFile = !stats.isDirectory()
             , extName = p.match(/\.\w*$/);
-            ;
 
             extName = extName && extName[0];
 
@@ -157,6 +156,9 @@ module.exports = function (destPath, exclude, exclOpts) {
   }, function (cb){
     var stream = this;
     Object.keys(parentsToExclude).forEach(function(dir){
+      if (dir.match(/\*\*$/)) {
+        return;
+      }
       exclude.push("!" + path.join(destPath, dir));
     });
 
